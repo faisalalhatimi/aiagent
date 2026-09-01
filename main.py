@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import OpenAI, responses
 
 
 load_dotenv()
@@ -27,6 +27,12 @@ response = client.chat.completions.create(
 
 
 def main():
+    if response.usage != None:
+        print(f"Prompt tokens: {response.usage.prompt_tokens}")
+        print(f"Response tokens: {response.usage.completion_tokens}")
+    elif response.usage == None:
+        raise RuntimeError("no prompts detected")
+
     print(response.choices[0].message.content)
 
 
