@@ -1,11 +1,19 @@
 from functions.get_file_content import get_file_content
 
 
-result = get_file_content("calculator", "lorem.txt")
-print(f"lorem.txt length: {len(result)}")
-print(f"lorem.txt truncated: {'truncated' in result}")
+lorem_result = get_file_content("calculator", "lorem.txt")
+print(f"lorem.txt length: {len(lorem_result)}")
+print(f"lorem.txt truncated: {'truncated' in lorem_result}")
 
-print(get_file_content("calculator", "main.py"))
-print(get_file_content("calculator", "pkg/calculator.py"))
-print(get_file_content("calculator", "/bin/cat"))
-print(get_file_content("calculator", "pkg/does_not_exist.py"))
+
+def print_result(file_path: str, label: str |None=None) -> None:
+    if label is None:
+        label = file_path
+    result = get_file_content("calculator", file_path)
+    print(f" Result for {label} file:\n{result}")
+
+
+print_result("main.py")
+print_result("pkg/calculator.py")
+print_result("/bin/cat")
+print_result("pkg/does_not_exist.py")
