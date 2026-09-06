@@ -24,9 +24,11 @@ def run_python_file(
         if result.returncode != 0:
             output.append(f"Process exited with code {result.returncode}")
         if result.stdout == "" and result.stderr == "":
-            output.append("No output producen")
-        output.append(f"STDOUT: {result.stdout}")
-        output.append(f"STDERR: {result.stderr}")
-        return str(output)
+            output.append("No output produced")
+        if result.stdout:
+            output.append(f"STDOUT: {result.stdout}")
+        if result.stderr:
+            output.append(f"STDERR: {result.stderr}")
+        return "\n".join(output)
     except Exception as e:
         return f"Error: executing Python file: {e}"
