@@ -6,6 +6,9 @@ This is a simple ai agent made using Python.
 
 This project is a part of a backend course on [boot.dev](https://www.boot.dev/). 
 
+> [!Warning]
+> This tool is not designed to run in a production environment. It's a proof-of-concept and watered down version of what a real coding agent does. Run at your own risk.
+
 ## Requirements
 
 - uv
