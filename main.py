@@ -1,9 +1,9 @@
 import os
+import sys
 import argparse
-import json
 from dotenv import load_dotenv
 from utils.prompts import system_prompt
-from openai import OpenAI, responses
+from openai import OpenAI
 from utils.call_function import available_functions, call_function
 
 
@@ -30,17 +30,19 @@ messages = [
     {"role": "user", "content": args.user_prompt},
 ]
 
-response = client.chat.completions.create(
-    model="openrouter/free",
-    messages=messages,
-    tools=available_functions,
-    temperature=0,
-)
 
+def agent_logic(client, messages, args):
 
-def main():
+    response = client.chat.completions.create(
+        model="openrouter/free",
+        messages=messages,
+        tools=available_functions,
+        temperature=0,
+    )
+
     if not response.usage:
         raise RuntimeError("no prompts detected")
+
 
     if response.usage != None and args.verbose:
         print(f"User prompt: {args.user_prompt}")
@@ -48,18 +50,33 @@ def main():
         print(f"Response tokens: {response.usage.completion_tokens}")
 
     message = response.choices[0].message
+    messages.append(message)
 
     if message.tool_calls:
         for tool_call in message.tool_calls:
             result_message = call_function(tool_call, args.verbose)
+            messages.append(result_message)
 
             if result_message["content"] == "":
                 raise Exception("no content passed")
 
             if args.verbose == True:
                 print(f"-> {result_message['content']}")
+
+        return False
     else:
         print(message.content)
+        return True
+
+def main():
+    for _ in range(20):
+        done = agent_logic(client, messages, args)
+
+        if done:
+            break
+
+    else:
+        sys.exit("Couldn't produce a final result")
 
 
 if __name__ == "__main__":
