@@ -71,10 +71,8 @@ def agent_logic(client, messages, args):
 def main():
     for _ in range(20):
         done = agent_logic(client, messages, args)
-
         if done:
             break
-
     else:
         sys.exit("Couldn't produce a final result")
 
